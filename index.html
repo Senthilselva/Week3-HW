@@ -1,0 +1,163 @@
+		
+<!DOCTYPE html>
+
+<html lang="en">
+<head>			
+	<title>Senthil Selvakumar</title>
+  <!-- We link our html to the Bootstrap CDN -->
+  <link rel="stylesheet" type="text/css" href="css/reset.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+
+
+<body>
+
+	<div>
+		<p>Guess the letter</p>
+	</div>
+
+	<div id = "tries_remain"> </div>
+	<div id = "display_word"> </div>
+	<div id = "display_dash"> </div>
+	<div id = "display_notword"> </div>
+	
+
+
+	<script>
+		//Word Selection
+		var words = ["hello","because","water","tree"];
+	
+		//randomly selecting a word from the list
+		var ind = (words.length) * (Math.random());
+		ind = Math.round(ind);
+		//console.log(ind);
+		var word = words[ind];
+		console.log("Word selected by computer: "+ word);
+		word = word.toUpperCase();
+		
+		
+		wins = 0;
+		tries = 15;
+		
+		//Writing the dashes on the page
+		var dash = "  _  ";
+		var newword = [""];
+		var notword=[];
+
+		for(var i=0; i < word.length-1; i++){
+			dash = dash + "_  ";
+			newword.push(" ");
+		} 
+
+		var endgame = function(){
+			var want_to_go = confirm("Do you want to go Again?");
+			console.log("find commant to refresh page" + want_to_go);
+				
+
+			if(want_to_go == true){
+			 	console.log("find commant to refresh page");
+			} else {
+				console.log("find commad to go to other page");
+			}
+
+		}
+
+		//Function  to make a new word and 
+		var change_display_word = function(word, user_letter, newword){
+
+			//console.log("insde word change");
+			//loop to go through the word 
+			for (var i = 0; i < word.length; i++) {
+				
+				if (word.charAt(i) == user_letter){
+					newword[i] = user_letter;
+					//console.log("new word"+newword[i]);
+				}
+			} 
+			
+			console.log("insde word change"+word + user_letter + newword);
+			document.querySelector('#display_dash').innerHTML = newword; 
+
+			var word1 = newword.join("");
+			//console.log(word1);
+
+			if(word1 == word){
+				document.write("Winner");
+			}
+			return newword;
+		}
+
+
+		var change_tries = function(tries){
+
+			//check for remaining tries 
+			if(tries == 0){
+
+				var message = "No more Tries";
+				document.querySelector('#tries_remain').innerHTML = message;
+
+				endgame();
+				
+				
+			} else {
+				// if the letter does not exict reduse the tries by one
+				tries--;
+				document.querySelector('#tries_remain').innerHTML = tries;
+				return tries;
+			}
+		}
+
+
+		document.querySelector('#display_dash').innerHTML = newword;
+		
+		console.log(newword.length);
+
+		document.querySelector('#display_dash').innerHTML = dash;
+
+		 var user_letter;
+
+		 //Getting in put from the user
+		document.onkeyup = function(event){
+
+			//sign the key stroke to a var
+			user_letter = String.fromCharCode(event.keyCode).toUpperCase();
+			
+
+			//assign the locatiion on the letter to a var
+			var pos = word.indexOf(user_letter);
+			// check the the letter is in variable
+			if (pos < 0){
+
+				//check if the letter not in the word already entered
+				var pos_notword = notword.indexOf(user_letter);
+				if (pos_notword < 0){
+					//console.log("not in word");
+					//create a list of wrong words entried  
+					notword.push(user_letter);
+					document.querySelector('#display_notword').innerHTML = notword;
+
+
+					//Calling function to countdown tries
+					tries = change_tries(tries);
+
+				}
+
+			} else {
+
+				//Checking to see if the correct  the letter is already entered 
+				var pos_newword = newword.indexOf(user_letter);
+				if(pos_newword < 0 ){
+					//if not add it the new word
+					newword = change_display_word(word, user_letter, newword);
+				}
+				else {
+					console.log ("enterin the same letter");
+				}
+
+			}	
+		}
+
+	</script>
+		
+</body>

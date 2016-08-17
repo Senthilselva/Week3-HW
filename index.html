@@ -1,163 +1,287 @@
-		
 <!DOCTYPE html>
 
 <html lang="en">
+
 <head>			
 	<title>Senthil Selvakumar</title>
-  <!-- We link our html to the Bootstrap CDN -->
-  <link rel="stylesheet" type="text/css" href="css/reset.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="css/style.css">
+
+  	<link href="https://fonts.googleapis.com/css?family=Arima+Madurai" rel="stylesheet">
+ 	<link rel="stylesheet" type="text/css" href="css/reset.css">
+  	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  	<link rel="stylesheet" type="text/css" href="css/style.css"> 
+
 </head>
 
 
 <body>
 
-	<div>
-		<p>Guess the letter</p>
-	</div>
-
-	<div id = "tries_remain"> </div>
-	<div id = "display_word"> </div>
-	<div id = "display_dash"> </div>
-	<div id = "display_notword"> </div>
+	<header>
+		<h1> Hang-Man <br> US Hisory Vocab Words </h1>
+	</header>
+	<div class="container"><!--container -->
+		
+		<div class="row"> <!-- row one -->
+			<div class= "col-md-12">
+				<h3>Guess your letter to continue</h3>
+			</div>
+		</div><!-- close row one -->
 	
 
+		<div class = "row" ><!--row 2 a picture - 3 colums- 6 empty win count 3 coloums -->
+			<div class = "col-md-4">
+			 	<p> image coming soon </p>
+			</div>
+			<div class="col-md-4">
+				<h3> Guesses Remaining for this Game
+				<div id = "tries_remain"> </div></h3>
+			</div>
+			<div class="col-md-4">
+				<h4> Wins
+				<div id="display_wins"></div></h4>
+				<h3>------</h3>
+				<h4> Losses
+				<div id="display_loss"></div></h4>
+			</div>
+		</div> <!-- close row 2 -->
 
-	<script>
-		//Word Selection
-		var words = ["hello","because","water","tree"];
+		<div class = "row"> <!-- row 3 display word -->
+			<div class = "col-md-12">
+			 <h1> <div id = "display_word"> </div> </h1>
+			</div>
+		</div> <!-- Close row 3 --> 
+
+		<div class = row> <!-- row 4 display word -->
+			<div class = "col-md-12">
+			<div class = row>
+				<h4> Letters Already Guessed <br>
+				<div id="display_notword"></div>
+				</h4>
+			</div>
+			<
+		</div> <!-- Close row 4 --> 
+		
+	</div><!--close container -->
+
+
+	<footer>
+	<!-- Hint for the word -->
+	<div id = "display_hint"> </div>
+	</footer>
+
+<script>
+
+	// VARIABLES - Global - Word list
+	// ==========================================================================
+	var wins = 0;
+	var losses = 0;
+	var iscontinue = true;
 	
-		//randomly selecting a word from the list
-		var ind = (words.length) * (Math.random());
-		ind = Math.round(ind);
-		//console.log(ind);
-		var word = words[ind];
-		console.log("Word selected by computer: "+ word);
-		word = word.toUpperCase();
-		
-		
-		wins = 0;
-		tries = 15;
-		
-		//Writing the dashes on the page
-		var dash = "  _  ";
-		var newword = [""];
-		var notword=[];
+	var words = [
+		{vocab:"Federalist", defi:"a member of a former political party in the United States that favored a strong centralized federal government"},
+		{vocab:"abolitionist", defi:"a reformer who favors putting an end to slavery"},
+		{vocab:"blockade", defi:"a war measure isolating an area of importance to the enemy"},
+		{vocab:"agrarian", defi:"relating to rural matters"},
+		{vocab:"boycott", defi:"refusal to have commercial dealings with some organization"},
+		{vocab:"caucus", defi:"meet to select a candidate or promote a policy"}
+		];
 
-		for(var i=0; i < word.length-1; i++){
-			dash = dash + "_  ";
-			newword.push(" ");
-		} 
+	//original word
 
-		var endgame = function(){
-			var want_to_go = confirm("Do you want to go Again?");
-			console.log("find commant to refresh page" + want_to_go);
-				
+	var word = {
+		chosen_word:"",
+		defi1:"",
+		arr_chosen_word:[],
+		guess_letters:"",
+		arr_guess_letters:[],
+		build_word:"",
+		arr_build_word:[],
+		guesses_remain:4,
+		iswinner:false,
 
-			if(want_to_go == true){
-			 	console.log("find commant to refresh page");
-			} else {
-				console.log("find commad to go to other page");
+		assign_word: function(){
+
+			//reset all variables
+			this.chosen_word="";
+			this.arr_chosen_word=[];
+			this.guess_letters="";
+			this.arr_guess_letters=[];
+			this.build_word="";
+			this.arr_build_word=[];
+			this.guesses_remain=4;
+			this.iswinner=false;
+			this.defi1="";
+
+			iscontinue = false;
+
+			//randomly selecting a word from the array
+			var ind = (words.length-1) * (Math.random());
+			ind = Math.round(ind);
+			//console.log(ind);
+			this.chosen_word = words[ind].vocab;
+			this.chosen_word = this.chosen_word.toUpperCase();
+			console.log("Word selected by computer: "+ this.chosen_word);
+
+			//make the array into word
+			this.arr_chosen_word=this.chosen_word.split("");
+			console.log("Array of the Word selected by computer: "+ this.arr_chosen_word);
+
+			//displaying the hint at the bottom
+			this.defi1 = words[ind].defi;
+			console.log(this.defi1);
+			//document.querySelector('#display_hint').innerHTML = defi1;
+
+			//Assign the new word with "_"
+			for(var i=0; i<this.chosen_word.length; i++){
+				this.arr_build_word.push("_");
 			}
+			console.log("The new word "+ this.arr_build_word);
+			this.build_word=this.arr_build_word.join("");
+			console.log("The new word "+ this.build_word);
 
-		}
+			//remove the word from the list
+			words[ind]=words[words.length-1];
+			words.pop();
+		
+			this.populate_html();
+		},//closing the assign word function
 
-		//Function  to make a new word and 
-		var change_display_word = function(word, user_letter, newword){
+		
+		populate_html(){
+			document.querySelector('#tries_remain').innerHTML = this.guesses_remain;
+			document.querySelector('#display_word').innerHTML = this.build_word;
+			this.arr_guess_letters = this.guess_letters.split("");
+			document.querySelector('#display_notword').innerHTML = this.arr_guess_letters;
+			document.querySelector('#display_hint').innerHTML = this.defi1;
 
-			//console.log("insde word change");
-			//loop to go through the word 
-			for (var i = 0; i < word.length; i++) {
-				
-				if (word.charAt(i) == user_letter){
-					newword[i] = user_letter;
-					//console.log("new word"+newword[i]);
+			document.querySelector('#display_wins').innerHTML = wins;
+			document.querySelector('#display_loss').innerHTML = losses;
+		},
+
+		//ending each game
+		end_game: function(){
+			console.log(" inside end game Winner"+this.iswinner);
+			if(words.length < 0){
+				document.write("You have finished all the word. Total Wins:" + Wins);
+			} else {
+				if(this.iswinner){
+					
+					wins++;
+					//console.log("ha ha ha " + this.chosen_word);
+					document.querySelector('#display_word').innerHTML = "Congratulation! You are right!! The word is  " + this.chosen_word;
+					//console.log("lol ha ha " + this.chosen_word);
+				}else{
+					losses++;
+					//console.log("ha ha ha " + this.chosen_word);	 
+					document.querySelector('#display_word').innerHTML = "Better Luck next time. The word is  " + this.chosen_word;
+					//console.log("lol ha ha " + this.chosen_word);
 				}
-			} 
-			
-			console.log("insde word change"+word + user_letter + newword);
-			document.querySelector('#display_dash').innerHTML = newword; 
 
-			var word1 = newword.join("");
-			//console.log(word1);
-
-			if(word1 == word){
-				document.write("Winner");
 			}
-			return newword;
-		}
+
+		//****************if you make this out the code will work for one time with out any problem************************
+		iscontinue = confirm("Do you want to continue");
+		},
 
 
-		var change_tries = function(tries){
-
-			//check for remaining tries 
-			if(tries == 0){
-
-				var message = "No more Tries";
-				document.querySelector('#tries_remain').innerHTML = message;
-
-				endgame();
-				
-				
-			} else {
-				// if the letter does not exict reduse the tries by one
-				tries--;
-				document.querySelector('#tries_remain').innerHTML = tries;
-				return tries;
+		//Called from the progam that calculates wrong guesses
+		change_remaining_guess: function(){
+			this.guesses_remain--;
+			this.populate_html();
+				console.log(this.guesses_remain);
+			if(this.guesses_remain == 0){
+				//jump out of the loop
+				this.end_game();	
 			}
-		}
+		}, //closes chane_remaining guess function
 
 
-		document.querySelector('#display_dash').innerHTML = newword;
-		
-		console.log(newword.length);
+		//creates a word with wrong function
+		add_to_guess_letters: function(user_letter){
 
-		document.querySelector('#display_dash').innerHTML = dash;
-
-		 var user_letter;
-
-		 //Getting in put from the user
-		document.onkeyup = function(event){
-
-			//sign the key stroke to a var
-			user_letter = String.fromCharCode(event.keyCode).toUpperCase();
-			
-
-			//assign the locatiion on the letter to a var
-			var pos = word.indexOf(user_letter);
-			// check the the letter is in variable
-			if (pos < 0){
-
-				//check if the letter not in the word already entered
-				var pos_notword = notword.indexOf(user_letter);
+			var pos_notword = this.guess_letters.indexOf(user_letter);
+				
 				if (pos_notword < 0){
-					//console.log("not in word");
-					//create a list of wrong words entried  
-					notword.push(user_letter);
-					document.querySelector('#display_notword').innerHTML = notword;
-
+					console.log("Letter not in word");
+					
+					//create a list of wrong guesses  
+					this.arr_guess_letters.push(user_letter);
+					this.guess_letters= this.arr_guess_letters.join("");
+					//document.querySelector('#display_notword').innerHTML = this.guess_letters;
+					this.populate_html();
 
 					//Calling function to countdown tries
-					tries = change_tries(tries);
+					this.change_remaining_guess();
 
 				}
 
-			} else {
+		}, //closing add to guess function
 
-				//Checking to see if the correct  the letter is already entered 
-				var pos_newword = newword.indexOf(user_letter);
-				if(pos_newword < 0 ){
-					//if not add it the new word
-					newword = change_display_word(word, user_letter, newword);
+		//making the new word
+		add_to_building_word: function(user_letter){
+			for (var i = 0; i < this.chosen_word.length; i++) {
+				
+				if (this.chosen_word.charAt(i) == user_letter){
+					this.arr_build_word[i] = user_letter;	
 				}
-				else {
-					console.log ("enterin the same letter");
-				}
+			}
+				this.build_word=this.arr_build_word.join("");
 
-			}	
+				this.populate_html();
+				//console.log(this.build_word);
+			
+				//checking to see if the word is finished
+				if(this.build_word == this.chosen_word){
+
+					alert("hello");
+					this.iswinner = true;
+					console.log("Winner"+this.iswinner);
+					this.end_game();
+				} 
+			 
+		}
+ 
+	} //closing the word object
+
+	
+	function play_game() {
+
+		word.assign_word();
+
+		//waiting for key 
+		document.onkeyup = function(event){
+
+		//sign the key stroke to a var
+		user_letter = String.fromCharCode(event.keyCode).toUpperCase();
+
+		//assign the locatiion on the letter to a var
+		var pos = word.chosen_word.indexOf(user_letter);
+			
+		// check the the letter is in variable
+		if (pos < 0){
+
+			word.add_to_guess_letters(user_letter);
+
+		} else {
+
+			word.add_to_building_word(user_letter);
 		}
 
-	</script>
+		//if(!iscontinue){
+		//	document.wite("Game Over");
+		//}else{
+		//word.assign_word();	
+		//}
 		
+	}
+}
+
+	play_game();
+
+
+</script>
+
+
+
 </body>
+
+</html>

@@ -1,4 +1,36 @@
 /* background for all the page */
 body{
+	font-family: 'Arima Madurai', cursive;
+	font-size: 30px;
+	font-weight: bolder;
 /*background-image: url("../images/Endangered-Forests-of-the-World.jpg");*/
+} 
+
+
+header{
+	font-size: 48px;
+  	text-shadow: 4px 4px 4px #aaa;
+  	text-align: center;
+}
+
+h1,
+h3,
+h4,
+h5
+{
+	text-align: center;
+}
+
+footer{
+	font-size: 15px;
+	text-align: center;
+
+	position: fixed;
+	bottom:0px;
+
+	height:auto;
+	width: 100%;
+	border-top: 3px solid #4aaaa5;
+	padding-top: 20px;
+
 }

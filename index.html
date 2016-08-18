@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>			
-	<title>Senthil Selvakumar</title>
+	<title>Hang Man</title>
 
   	<link href="https://fonts.googleapis.com/css?family=Arima+Madurai" rel="stylesheet">
  	<link rel="stylesheet" type="text/css" href="css/reset.css">
@@ -28,12 +28,13 @@
 	
 
 		<div class = "row" ><!--row 2 a picture - 3 colums- 6 empty win count 3 coloums -->
-			<div class = "col-md-4">
-			 	<p> image coming soon </p>
+			<div class = "col-md-4 side_image">
+				<img class = "img-responsive" id = "change_image" src="images/main_pic.jpe">
 			</div>
 			<div class="col-md-4">
-				<h3> Guesses Remaining for this Game
-				<div id = "tries_remain"> </div></h3>
+				<div id="end_continue_box" class = "end_hidden_box"></div>
+				<h3 id="ask_to_cont"> Guesses Remaining for this Game</h3>
+				<div id = "tries_remain"> </div>
 			</div>
 			<div class="col-md-4">
 				<h4> Wins
@@ -57,11 +58,10 @@
 				<div id="display_notword"></div>
 				</h4>
 			</div>
-			<
+			</div>
 		</div> <!-- Close row 4 --> 
 		
 	</div><!--close container -->
-
 
 	<footer>
 	<!-- Hint for the word -->
@@ -74,7 +74,7 @@
 	// ==========================================================================
 	var wins = 0;
 	var losses = 0;
-	var iscontinue = true;
+	//var iscontinue = true;
 	
 	var words = [
 		{vocab:"Federalist", defi:"a member of a former political party in the United States that favored a strong centralized federal government"},
@@ -97,6 +97,7 @@
 		arr_build_word:[],
 		guesses_remain:4,
 		iswinner:false,
+		isgameover:false,
 
 		assign_word: function(){
 
@@ -109,6 +110,7 @@
 			this.arr_build_word=[];
 			this.guesses_remain=4;
 			this.iswinner=false;
+			//this.isgameover=false;
 			this.defi1="";
 
 			iscontinue = false;
@@ -142,44 +144,52 @@
 			words[ind]=words[words.length-1];
 			words.pop();
 		
-			this.populate_html();
+			//this.populate_html();
 		},//closing the assign word function
 
 		
 		populate_html(){
+			console.log("life over"+ this.isgameover);
+			if (this.isgameover){
+
+			isgameover=false;
+			var end_box_div = document.querySelector('#end_continue_box');
+			end_box_div.setAttribute("class","end_hidden_box");
+			document.querySelector('#ask_to_cont').innerHTML="Guesses Remaining for this Game";
+			}
+
+			console.log("life over"+ this.isgameover);
 			document.querySelector('#tries_remain').innerHTML = this.guesses_remain;
 			document.querySelector('#display_word').innerHTML = this.build_word;
 			this.arr_guess_letters = this.guess_letters.split("");
 			document.querySelector('#display_notword').innerHTML = this.arr_guess_letters;
-			document.querySelector('#display_hint').innerHTML = this.defi1;
+			document.querySelector('#display_hint').innerHTML = "Hint:  " +  this.defi1;
 
 			document.querySelector('#display_wins').innerHTML = wins;
 			document.querySelector('#display_loss').innerHTML = losses;
-		},
+		}, // PoPulate Html
 
 		//ending each game
 		end_game: function(){
-			console.log(" inside end game Winner"+this.iswinner);
-			if(words.length < 0){
-				document.write("You have finished all the word. Total Wins:" + Wins);
+			console.log(" inside end game Winner"+this.iswinner+"Number of words in list"+words.length);
+			if(words.length <= 0){
+				document.write("Good bye !!!!! You have finished all the word in my list. Total Wins:" + wins + "Total loses" +losses);
 			} else {
 				if(this.iswinner){
-					
+
 					wins++;
-					//console.log("ha ha ha " + this.chosen_word);
+					//console.log("no of wins"+wins);
 					document.querySelector('#display_word').innerHTML = "Congratulation! You are right!! The word is  " + this.chosen_word;
-					//console.log("lol ha ha " + this.chosen_word);
 				}else{
 					losses++;
-					//console.log("ha ha ha " + this.chosen_word);	 
+					//console.log("no of wins"+losses);	 
 					document.querySelector('#display_word').innerHTML = "Better Luck next time. The word is  " + this.chosen_word;
-					//console.log("lol ha ha " + this.chosen_word);
 				}
 
 			}
-
-		//****************if you make this out the code will work for one time with out any problem************************
-		iscontinue = confirm("Do you want to continue");
+			this.isgameover=true;
+				//console.log("ha ha ha);		
+		
 		},
 
 
@@ -200,19 +210,18 @@
 
 			var pos_notword = this.guess_letters.indexOf(user_letter);
 				
-				if (pos_notword < 0){
-					console.log("Letter not in word");
+			if (pos_notword < 0){
+				console.log("Letter not in word");
 					
 					//create a list of wrong guesses  
-					this.arr_guess_letters.push(user_letter);
-					this.guess_letters= this.arr_guess_letters.join("");
+				this.arr_guess_letters.push(user_letter);
+				this.guess_letters= this.arr_guess_letters.join("");
 					//document.querySelector('#display_notword').innerHTML = this.guess_letters;
-					this.populate_html();
+				this.populate_html();
 
 					//Calling function to countdown tries
-					this.change_remaining_guess();
-
-				}
+				this.change_remaining_guess();
+			}
 
 		}, //closing add to guess function
 
@@ -232,7 +241,7 @@
 				//checking to see if the word is finished
 				if(this.build_word == this.chosen_word){
 
-					alert("hello");
+					//alert("hello");
 					this.iswinner = true;
 					console.log("Winner"+this.iswinner);
 					this.end_game();
@@ -246,7 +255,7 @@
 	function play_game() {
 
 		word.assign_word();
-
+		word.populate_html();
 		//waiting for key 
 		document.onkeyup = function(event){
 
@@ -266,11 +275,14 @@
 			word.add_to_building_word(user_letter);
 		}
 
-		//if(!iscontinue){
-		//	document.wite("Game Over");
-		//}else{
-		//word.assign_word();	
-		//}
+		if (word.isgameover){
+			var end_box_div = document.querySelector('#end_continue_box');
+			end_box_div.setAttribute("class","end_show_box");
+			end_box_div.innerHTML='<input class="btn btn-success" type="button" value="Yes" onClick="play_game()">'+'&nbsp'+ 
+									'<input class="btn btn-danger" type="button" value="No" onClick="">';
+
+				document.querySelector('#ask_to_cont').innerHTML = "Do you want to continue?";
+		}
 		
 	}
 }

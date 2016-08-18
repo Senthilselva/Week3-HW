@@ -3,6 +3,7 @@ body{
 	font-family: 'Arima Madurai', cursive;
 	font-size: 30px;
 	font-weight: bolder;
+	text-align:center;
 /*background-image: url("../images/Endangered-Forests-of-the-World.jpg");*/
 } 
 
@@ -11,14 +12,6 @@ header{
 	font-size: 48px;
   	text-shadow: 4px 4px 4px #aaa;
   	text-align: center;
-}
-
-h1,
-h3,
-h4,
-h5
-{
-	text-align: center;
 }
 
 footer{
@@ -31,6 +24,29 @@ footer{
 	height:auto;
 	width: 100%;
 	border-top: 3px solid #4aaaa5;
-	padding-top: 20px;
+	padding-top: 15px;
+	padding-bottom: 15px;
 
+
+}
+
+.end_hidden_box{
+	width: 100%;
+	height:100%;
+	background-color: red;
+	display: none;
+}
+
+.end_show_box{
+	width: 120%;
+	height:100%;
+	//background-color: gray;
+	text-align: center;
+}
+
+img.side_image{
+	border: 2px solid black;
+	height: auto;
+	width: 100%;
+	box-shadow: 5px 5px gray;
 }

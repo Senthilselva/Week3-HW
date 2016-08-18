@@ -46,7 +46,12 @@ footer{
 
 img.side_image{
 	border: 2px solid black;
-	height: auto;
-	width: 100%;
+	height: 200px;
+	width: 200px;
 	box-shadow: 5px 5px gray;
+}
+
+.logo{
+	width: 75px;
+	height: 50px;
 }

@@ -16,7 +16,15 @@
 <body>
 
 	<header>
-		<h1> Hang-Man <br> US Hisory Vocab Words </h1>
+		<nav class="navbar navbar-default">
+		  <div class="container-fluid">
+				<div class = "navbar-center">
+					<img src="images/main_pic.jpe" class = "logo"> 
+					 HangMan - US Hisory Vocab Words 
+					<img src="images/main_pic.jpe" class = "logo">
+				</div>	
+			</div>
+		</nav>
 	</header>
 	<div class="container"><!--container -->
 		
@@ -28,8 +36,8 @@
 	
 
 		<div class = "row" ><!--row 2 a picture - 3 colums- 6 empty win count 3 coloums -->
-			<div class = "col-md-4 side_image">
-				<img class = "img-responsive" id = "change_image" src="images/main_pic.jpe">
+			<div class = "col-md-4">
+				<img class = "thumbnail side_image" id = "change_image" src="images/main_pic.jpe">
 			</div>
 			<div class="col-md-4">
 				<div id="end_continue_box" class = "end_hidden_box"></div>
@@ -77,13 +85,19 @@
 	//var iscontinue = true;
 	
 	var words = [
-		{vocab:"Federalist", defi:"a member of a former political party in the United States that favored a strong centralized federal government"},
-		{vocab:"abolitionist", defi:"a reformer who favors putting an end to slavery"},
-		{vocab:"blockade", defi:"a war measure isolating an area of importance to the enemy"},
-		{vocab:"agrarian", defi:"relating to rural matters"},
-		{vocab:"boycott", defi:"refusal to have commercial dealings with some organization"},
-		{vocab:"caucus", defi:"meet to select a candidate or promote a policy"}
+		{vocab:"Federalist", defi:"a member of a former political party in the United States that favored a strong centralized federal government", imsrc:"images/federalist.jpe"},
+		{vocab:"abolitionist", defi:"a reformer who favors putting an end to slavery", imsrc:"images/abolitionist.jpe"},
+		{vocab:"blockade", defi:"a war measure isolating an area of importance to the enemy", imsrc:"images/blockade.jpe"},
+		{vocab:"agrarian", defi:"relating to rural matters", imsrc:"images/agrarian.jpe"},
+		{vocab:"boycott", defi:"refusal to have commercial dealings with some organization", imsrc:"images/boycott.png"},
+		{vocab:"caucus", defi:"meet to select a candidate or promote a policy", imsrc:"images/caucus.jpe"}
 		];
+
+	//finish game is called when the player quits are the list is over
+	function finish_game(){
+		document.write("   Total wins = "+ wins + "      Total losses = " + losses + " Good Bye ");
+
+	}
 
 	//original word
 
@@ -140,9 +154,19 @@
 			this.build_word=this.arr_build_word.join("");
 			console.log("The new word "+ this.build_word);
 
+			//image on the side 
+			var ch_image=document.getElementById("change_image");
+			console.log(words[ind].imsrc);
+			ch_image.src=words[ind].imsrc;
+		
+
 			//remove the word from the list
 			words[ind]=words[words.length-1];
 			words.pop();
+
+			// var ch_image=document.getElementById("change_image");
+			// console.log(words[ind].imsrc);
+			// ch_image.src=words[ind].imsrc;
 		
 			//this.populate_html();
 		},//closing the assign word function
@@ -173,7 +197,14 @@
 		end_game: function(){
 			console.log(" inside end game Winner"+this.iswinner+"Number of words in list"+words.length);
 			if(words.length <= 0){
-				document.write("Good bye !!!!! You have finished all the word in my list. Total Wins:" + wins + "Total loses" +losses);
+
+					//to record the result of last game
+					if(this.iswinner){
+					wins++;
+				}else{
+					losses++;
+				}
+				document.write("Good bye !!!!! You have finished all the word in my list. Total Wins:   " + wins +"   Total loses:  " +losses+"    See you Soon!!");
 			} else {
 				if(this.iswinner){
 
@@ -279,7 +310,7 @@
 			var end_box_div = document.querySelector('#end_continue_box');
 			end_box_div.setAttribute("class","end_show_box");
 			end_box_div.innerHTML='<input class="btn btn-success" type="button" value="Yes" onClick="play_game()">'+'&nbsp'+ 
-									'<input class="btn btn-danger" type="button" value="No" onClick="">';
+									'<input class="btn btn-danger" type="button" value="No" onClick="finish_game()">';
 
 				document.querySelector('#ask_to_cont').innerHTML = "Do you want to continue?";
 		}
